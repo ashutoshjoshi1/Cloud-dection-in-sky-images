@@ -72,7 +72,7 @@ def solar_angle(times, latitude=37.424107, longitude=-122.174199, time_zone_cent
     
     return degrees(xi), degrees(chi)
 
-def sun_position(time):
+def sun_position(time, latitude=37.424107, longitude=-122.174199, time_zone_center_longitude=-120):
     """
     Take the time stamp of the sky image
     return the position of the sun (x, y), in Cartesian coordinates, and a binary sun mask
@@ -87,7 +87,7 @@ def sun_position(time):
     origin_y = 30 # Cartesian coordinates of the sky image center y=30
 
     # calculate
-    azimuth, zenith = solar_angle(time)
+    azimuth, zenith = solar_angle(time, latitude=latitude, longitude=longitude, time_zone_center_longitude=time_zone_center_longitude)
     rho = zenith/90*r # polar coordinate length dimension
     theta = azimuth-delta+90 # polar coordinate degree dimension
     sun_center_x = round(origin_x-rho*sin(radians(theta)))

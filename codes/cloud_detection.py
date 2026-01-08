@@ -6,9 +6,10 @@ Created on Sat Aug 10 16:55:00 2019
 
 import numpy as np
 import os
+from math import pi
 from sun_position_identification import *
 
-def cloud_detection(time, image, csl_time=None):
+def cloud_detection(time, image, csl_time=None, latitude=37.424107, longitude=-122.174199, time_zone_center_longitude=-120):
     
     """
     Take inputs of sky image and its assoicated time
@@ -19,7 +20,7 @@ def cloud_detection(time, image, csl_time=None):
     ### Load clear sky library
     if csl_time == None:
         proj_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        clear_sky_library_path = os.path.join(proj_path, 'data','clear_sky_library')
+        clear_sky_library_path = os.path.join(proj_path, 'sample_data','clear_sky_library')
         csl_time = np.load(os.path.join(clear_sky_library_path,'csl_times.npy'),allow_pickle=True)
         csl_image = np.load(os.path.join(clear_sky_library_path,'csl_images.npy'),allow_pickle=True)
         csl_sun_center = np.load(os.path.join(clear_sky_library_path,'csl_sun_center.npy'),allow_pickle=True)
@@ -27,7 +28,7 @@ def cloud_detection(time, image, csl_time=None):
         csl_sun_center_y = csl_sun_center[:,1]
     
     ### Sun position in the original image
-    sun_center_x, sun_center_y, sun_mask = sun_position(time)
+    sun_center_x, sun_center_y, sun_mask = sun_position(time, latitude=latitude, longitude=longitude, time_zone_center_longitude=time_zone_center_longitude)
     
     ### Match the image in CSL based on similar sun position
     dist_sun_center = np.sqrt((csl_sun_center_x-sun_center_x)**2+(csl_sun_center_y-sun_center_y)**2)
